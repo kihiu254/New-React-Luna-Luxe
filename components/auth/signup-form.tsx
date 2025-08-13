@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useAuth } from "@/hooks/use-auth"
 import { useToast } from "@/hooks/use-toast"
+import { Eye, EyeOff } from "lucide-react"
 
 export function SignupForm() {
   const [formData, setFormData] = useState({
@@ -20,6 +21,8 @@ export function SignupForm() {
   })
   const [acceptTerms, setAcceptTerms] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   const { login } = useAuth()
   const { toast } = useToast()
@@ -84,7 +87,9 @@ export function SignupForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
-        <Label htmlFor="name">Full Name</Label>
+        <Label htmlFor="name" className="text-foreground font-medium">
+          Full Name
+        </Label>
         <Input
           id="name"
           name="name"
@@ -93,12 +98,14 @@ export function SignupForm() {
           onChange={handleChange}
           placeholder="Enter your full name"
           required
-          className="mt-1"
+          className="mt-1 auth-input"
         />
       </div>
 
       <div>
-        <Label htmlFor="email">Email Address</Label>
+        <Label htmlFor="email" className="text-foreground font-medium">
+          Email Address
+        </Label>
         <Input
           id="email"
           name="email"
@@ -107,36 +114,68 @@ export function SignupForm() {
           onChange={handleChange}
           placeholder="Enter your email address"
           required
-          className="mt-1"
+          className="mt-1 auth-input"
         />
       </div>
 
       <div>
-        <Label htmlFor="password">Password</Label>
-        <Input
-          id="password"
-          name="password"
-          type="password"
-          value={formData.password}
-          onChange={handleChange}
-          placeholder="Create a password (min. 6 characters)"
-          required
-          className="mt-1"
-        />
+        <Label htmlFor="password" className="text-foreground font-medium">
+          Password
+        </Label>
+        <div className="relative mt-1">
+          <Input
+            id="password"
+            name="password"
+            type={showPassword ? "text" : "password"}
+            value={formData.password}
+            onChange={handleChange}
+            placeholder="Create a password (min. 6 characters)"
+            required
+            className="auth-input pr-10"
+            style={{
+              fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace',
+              letterSpacing: "0.05em",
+            }}
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+            aria-label={showPassword ? "Hide password" : "Show password"}
+          >
+            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+          </button>
+        </div>
       </div>
 
       <div>
-        <Label htmlFor="confirmPassword">Confirm Password</Label>
-        <Input
-          id="confirmPassword"
-          name="confirmPassword"
-          type="password"
-          value={formData.confirmPassword}
-          onChange={handleChange}
-          placeholder="Confirm your password"
-          required
-          className="mt-1"
-        />
+        <Label htmlFor="confirmPassword" className="text-foreground font-medium">
+          Confirm Password
+        </Label>
+        <div className="relative mt-1">
+          <Input
+            id="confirmPassword"
+            name="confirmPassword"
+            type={showConfirmPassword ? "text" : "password"}
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            placeholder="Confirm your password"
+            required
+            className="auth-input pr-10"
+            style={{
+              fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace',
+              letterSpacing: "0.05em",
+            }}
+          />
+          <button
+            type="button"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+            aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+          >
+            {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+          </button>
+        </div>
       </div>
 
       <div className="flex items-start space-x-2">
@@ -146,13 +185,13 @@ export function SignupForm() {
           onCheckedChange={(checked) => setAcceptTerms(checked as boolean)}
           className="mt-1"
         />
-        <Label htmlFor="terms" className="text-sm leading-5">
+        <Label htmlFor="terms" className="text-sm leading-5 text-foreground">
           I agree to the{" "}
-          <a href="/terms" className="text-gray-900 hover:text-gray-700 underline">
+          <a href="/terms" className="text-primary hover:text-primary/80 underline transition-colors">
             Terms of Service
           </a>{" "}
           and{" "}
-          <a href="/privacy" className="text-gray-900 hover:text-gray-700 underline">
+          <a href="/privacy" className="text-primary hover:text-primary/80 underline transition-colors">
             Privacy Policy
           </a>
         </Label>

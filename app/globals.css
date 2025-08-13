@@ -4,25 +4,26 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(0.98 0.01 85);
-  --foreground: oklch(0.15 0.05 260);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.15 0.05 260);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.15 0.05 260);
-  --primary: oklch(0.15 0.05 260);
+  /* Light theme - softer, warmer colors */
+  --background: oklch(0.99 0.005 85);
+  --foreground: oklch(0.2 0.03 260);
+  --card: oklch(0.98 0.01 85);
+  --card-foreground: oklch(0.2 0.03 260);
+  --popover: oklch(0.98 0.01 85);
+  --popover-foreground: oklch(0.2 0.03 260);
+  --primary: oklch(0.25 0.04 260);
   --primary-foreground: oklch(0.98 0.01 85);
-  --secondary: oklch(0.96 0.01 85);
-  --secondary-foreground: oklch(0.15 0.05 260);
-  --muted: oklch(0.96 0.01 85);
-  --muted-foreground: oklch(0.55 0.02 260);
-  --accent: oklch(0.96 0.01 85);
-  --accent-foreground: oklch(0.15 0.05 260);
+  --secondary: oklch(0.94 0.015 85);
+  --secondary-foreground: oklch(0.25 0.04 260);
+  --muted: oklch(0.95 0.01 85);
+  --muted-foreground: oklch(0.5 0.02 260);
+  --accent: oklch(0.93 0.02 85);
+  --accent-foreground: oklch(0.25 0.04 260);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(0.92 0.01 85);
-  --input: oklch(0.92 0.01 85);
-  --ring: oklch(0.15 0.05 260);
+  --border: oklch(0.88 0.015 85);
+  --input: oklch(0.96 0.01 85);
+  --ring: oklch(0.25 0.04 260);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -40,38 +41,39 @@
 }
 
 .dark {
-  --background: oklch(0.12 0.02 260);
-  --foreground: oklch(0.95 0.01 85);
-  --card: oklch(0.15 0.02 260);
-  --card-foreground: oklch(0.95 0.01 85);
-  --popover: oklch(0.15 0.02 260);
-  --popover-foreground: oklch(0.95 0.01 85);
-  --primary: oklch(0.95 0.01 85);
-  --primary-foreground: oklch(0.15 0.02 260);
-  --secondary: oklch(0.2 0.02 260);
-  --secondary-foreground: oklch(0.95 0.01 85);
-  --muted: oklch(0.2 0.02 260);
-  --muted-foreground: oklch(0.65 0.01 85);
-  --accent: oklch(0.2 0.02 260);
-  --accent-foreground: oklch(0.95 0.01 85);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.95 0.01 85);
-  --border: oklch(0.2 0.02 260);
-  --input: oklch(0.2 0.02 260);
-  --ring: oklch(0.65 0.01 85);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.15 0.02 260);
-  --sidebar-foreground: oklch(0.95 0.01 85);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.95 0.01 85);
-  --sidebar-accent: oklch(0.2 0.02 260);
-  --sidebar-accent-foreground: oklch(0.95 0.01 85);
-  --sidebar-border: oklch(0.2 0.02 260);
-  --sidebar-ring: oklch(0.65 0.01 85);
+  /* Dark theme - less dense, better contrast */
+  --background: oklch(0.08 0.01 260);
+  --foreground: oklch(0.92 0.01 85);
+  --card: oklch(0.12 0.015 260);
+  --card-foreground: oklch(0.92 0.01 85);
+  --popover: oklch(0.12 0.015 260);
+  --popover-foreground: oklch(0.92 0.01 85);
+  --primary: oklch(0.88 0.02 85);
+  --primary-foreground: oklch(0.12 0.015 260);
+  --secondary: oklch(0.16 0.02 260);
+  --secondary-foreground: oklch(0.88 0.02 85);
+  --muted: oklch(0.14 0.015 260);
+  --muted-foreground: oklch(0.7 0.015 85);
+  --accent: oklch(0.18 0.02 260);
+  --accent-foreground: oklch(0.88 0.02 85);
+  --destructive: oklch(0.5 0.2 25);
+  --destructive-foreground: oklch(0.92 0.01 85);
+  --border: oklch(0.22 0.02 260);
+  --input: oklch(0.16 0.02 260);
+  --ring: oklch(0.7 0.015 85);
+  --chart-1: oklch(0.6 0.2 264);
+  --chart-2: oklch(0.7 0.15 162);
+  --chart-3: oklch(0.75 0.18 70);
+  --chart-4: oklch(0.65 0.25 304);
+  --chart-5: oklch(0.68 0.24 16);
+  --sidebar: oklch(0.12 0.015 260);
+  --sidebar-foreground: oklch(0.92 0.01 85);
+  --sidebar-primary: oklch(0.6 0.2 264);
+  --sidebar-primary-foreground: oklch(0.92 0.01 85);
+  --sidebar-accent: oklch(0.16 0.02 260);
+  --sidebar-accent-foreground: oklch(0.88 0.02 85);
+  --sidebar-border: oklch(0.22 0.02 260);
+  --sidebar-ring: oklch(0.7 0.015 85);
 }
 
 @theme inline {
@@ -119,6 +121,25 @@
   }
   body {
     @apply bg-background text-foreground transition-colors duration-300;
+  }
+
+  /* Enhanced input visibility for better password field readability */
+  input[type="password"] {
+    @apply bg-input text-foreground placeholder:text-muted-foreground;
+    font-family: monospace;
+    letter-spacing: 0.1em;
+  }
+
+  input[type="email"],
+  input[type="text"],
+  input[type="tel"] {
+    @apply bg-input text-foreground placeholder:text-muted-foreground;
+  }
+
+  /* Better focus states for form inputs */
+  input:focus {
+    @apply ring-2 ring-ring ring-offset-2 ring-offset-background;
+    outline: none;
   }
 }
 
@@ -212,13 +233,13 @@
   animation: shimmer 2s infinite;
 }
 
-/* LunaLuxe custom styles with theme support */
+/* Updated LunaLuxe custom styles with better theme contrast */
 .hero-gradient {
-  background: linear-gradient(135deg, #333 0%, #444 100%);
+  background: linear-gradient(135deg, oklch(0.25 0.04 260) 0%, oklch(0.35 0.05 260) 100%);
 }
 
 .dark .hero-gradient {
-  background: linear-gradient(135deg, #222 0%, #333 100%);
+  background: linear-gradient(135deg, oklch(0.15 0.02 260) 0%, oklch(0.25 0.03 260) 100%);
 }
 
 .text-gradient {
@@ -239,7 +260,7 @@
 }
 
 .dark .product-card:hover {
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
 
 .countdown-item {
@@ -259,21 +280,21 @@
 
 .countdown-label {
   font-size: 0.875rem;
-  opacity: 0.8;
+  opacity: 0.9;
   margin-top: 0.25rem;
 }
 
-/* Theme-aware logo filter for better visibility */
+/* Enhanced theme-aware logo filter for better visibility */
 .logo-filter {
   filter: none;
   transition: filter 0.3s ease;
 }
 
 .dark .logo-filter {
-  filter: brightness(1.1) contrast(1.1);
+  filter: brightness(1.2) contrast(1.1) saturate(1.1);
 }
 
-/* Enhanced theme-aware styles for better text visibility */
+/* Enhanced theme-aware styles for better text visibility across all components */
 .blog-card,
 .shop-filter,
 .contact-card {
@@ -281,15 +302,16 @@
 }
 
 .price-text {
-  @apply text-foreground;
+  @apply text-foreground font-semibold;
 }
 
 .category-button {
-  @apply bg-secondary text-secondary-foreground hover:bg-accent hover:text-accent-foreground;
+  @apply bg-secondary text-secondary-foreground hover:bg-accent hover:text-accent-foreground border border-border;
+  transition: all 0.2s ease;
 }
 
 .form-section {
-  @apply bg-card text-card-foreground;
+  @apply bg-card text-card-foreground border border-border;
 }
 
 .order-summary-card {
@@ -305,7 +327,20 @@
 }
 
 .help-section {
-  @apply bg-muted text-muted-foreground;
+  @apply bg-muted text-muted-foreground border border-border;
+}
+
+/* Enhanced auth form styling for better visibility */
+.auth-form {
+  @apply bg-card text-card-foreground border border-border shadow-lg;
+}
+
+.auth-input {
+  @apply bg-input text-foreground border-border focus:border-ring;
+}
+
+.forgot-password-link {
+  @apply text-muted-foreground hover:text-foreground transition-colors;
 }
 
 /* Additional animation utilities */
@@ -319,7 +354,7 @@
 }
 
 .dark .hover-lift:hover {
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
 }
 
 .pulse-glow {
@@ -337,7 +372,7 @@
 }
 
 .dark .testimonial-card:hover {
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
 }
 
 .newsletter-gradient {
