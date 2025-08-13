@@ -40,6 +40,11 @@ export function OrderConfirmation({ orderNumber, customerDetails, paymentDetails
     sendConfirmations()
   }, [customerDetails.email, customerDetails.phone])
 
+  const trackingUrl =
+    typeof window !== "undefined"
+      ? `/order-tracking?order=${orderNumber}&email=${encodeURIComponent(customerDetails.email)}`
+      : `/order-tracking`
+
   return (
     <div className="bg-card text-card-foreground rounded-lg shadow-sm p-8 text-center border border-border">
       <div className="mb-6">
@@ -107,7 +112,7 @@ export function OrderConfirmation({ orderNumber, customerDetails, paymentDetails
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link href={`/order-tracking?order=${orderNumber}&email=${encodeURIComponent(customerDetails.email)}`}>
+          <Link href={trackingUrl}>
             <Button variant="outline" className="w-full sm:w-auto bg-transparent">
               Track Your Order
             </Button>
