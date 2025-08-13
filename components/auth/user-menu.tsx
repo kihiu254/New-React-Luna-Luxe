@@ -40,8 +40,8 @@ export function UserMenu() {
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel>
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium">{user.name}</p>
-            <p className="text-xs text-muted-foreground">{user.email}</p>
+            <p className="text-sm font-medium">{user?.name || "paul kihiu"}</p>
+            <p className="text-xs text-muted-foreground">{user?.email || "1kihiupaul@gmail.com"}</p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />

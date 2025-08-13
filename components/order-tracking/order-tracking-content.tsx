@@ -55,13 +55,30 @@ export function OrderTrackingContent() {
   const [orderStatus, setOrderStatus] = useState<OrderStatus | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [initialOrderNumber, setInitialOrderNumber] = useState("")
+  const [initialEmail, setInitialEmail] = useState("")
   const searchParams = useSearchParams()
 
-  // Check if there's an order parameter in the URL (from checkout)
   useEffect(() => {
     const orderParam = searchParams.get("order")
-    if (orderParam && mockOrders[orderParam]) {
-      setOrderStatus(mockOrders[orderParam])
+    const emailParam = searchParams.get("email")
+
+    if (orderParam) {
+      setInitialOrderNumber(orderParam)
+    }
+
+    if (emailParam) {
+      setInitialEmail(decodeURIComponent(emailParam))
+    }
+
+    // If both parameters are present, automatically track the order
+    if (orderParam && emailParam && mockOrders[orderParam.toUpperCase()]) {
+      const order = mockOrders[orderParam.toUpperCase()]
+      const decodedEmail = decodeURIComponent(emailParam)
+
+      if (order.email.toLowerCase() === decodedEmail.toLowerCase()) {
+        setOrderStatus(order)
+      }
     }
   }, [searchParams])
 
@@ -95,18 +112,26 @@ export function OrderTrackingContent() {
   const handleReset = () => {
     setOrderStatus(null)
     setError(null)
+    setInitialOrderNumber("")
+    setInitialEmail("")
   }
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-serif font-bold text-gray-900 mb-2">Track Your Order</h1>
-        <p className="text-gray-600">Enter your order details below to track your package</p>
+        <h1 className="text-3xl font-serif font-bold mb-2">Track Your Order</h1>
+        <p className="text-muted-foreground">Enter your order details below to track your package</p>
       </div>
 
       {!orderStatus ? (
         <>
-          <OrderTrackingForm onSubmit={handleTrackOrder} isLoading={isLoading} error={error} />
+          <OrderTrackingForm
+            onSubmit={handleTrackOrder}
+            isLoading={isLoading}
+            error={error}
+            initialOrderNumber={initialOrderNumber}
+            initialEmail={initialEmail}
+          />
           <OrderTrackingHelp />
         </>
       ) : (
