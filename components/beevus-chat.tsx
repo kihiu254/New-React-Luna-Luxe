@@ -21,6 +21,21 @@ interface Message {
     rating: number
     reason: string
   }>
+  context?: {
+    intent: string
+    mood?: string
+    entities: string[]
+  }
+}
+
+interface ConversationContext {
+  userPreferences: {
+    genres: string[]
+    recentInteractions: string[]
+    currentMood?: string
+  }
+  conversationHistory: Message[]
+  lastIntent?: string
 }
 
 export function BeevusChat() {
@@ -29,19 +44,26 @@ export function BeevusChat() {
       id: "1",
       type: "beevus",
       content:
-        "Hello! I'm Beevus, your AI entertainment companion. I can help you discover new books and movies, track your progress, and provide personalized recommendations. What would you like to explore today?",
+        "Hello! I'm Beevus, your AI entertainment companion. I adapt to your unique preferences and conversation style. Tell me what's on your mind - I'll understand the context and provide personalized help!",
       timestamp: new Date(),
       suggestions: [
-        "Recommend sci-fi books",
-        "What should I watch tonight?",
-        "Help me track my reading",
-        "Show trending movies",
+        "I'm feeling adventurous today",
+        "Help me find something cozy",
+        "What matches my current mood?",
+        "Surprise me with something new",
       ],
     },
   ])
   const [inputValue, setInputValue] = useState("")
   const [isListening, setIsListening] = useState(false)
   const [isTyping, setIsTyping] = useState(false)
+  const [conversationContext, setConversationContext] = useState<ConversationContext>({
+    userPreferences: {
+      genres: [],
+      recentInteractions: [],
+    },
+    conversationHistory: [],
+  })
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const scrollToBottom = () => {
@@ -51,6 +73,320 @@ export function BeevusChat() {
   useEffect(() => {
     scrollToBottom()
   }, [messages])
+
+  const analyzeUserInput = (input: string, context: ConversationContext) => {
+    const words = input.toLowerCase().split(" ")
+    const entities = []
+    let intent = "general"
+    let mood = null
+
+    // Dynamic intent detection based on context and patterns
+    const intentPatterns = {
+      recommendation: ["recommend", "suggest", "find", "show", "what should", "help me choose"],
+      mood_based: ["feeling", "mood", "vibe", "atmosphere", "tone"],
+      progress: ["progress", "tracking", "finished", "completed", "reading", "watching"],
+      discovery: ["new", "different", "explore", "discover", "surprise"],
+      specific_query: ["about", "tell me", "explain", "why", "how"],
+      social: ["friends", "popular", "trending", "everyone", "people"],
+    }
+
+    // Mood detection
+    const moodPatterns = {
+      adventurous: ["adventure", "exciting", "thrilling", "bold", "daring"],
+      cozy: ["cozy", "comfort", "warm", "relaxing", "peaceful", "calm"],
+      intellectual: ["smart", "deep", "thoughtful", "complex", "challenging"],
+      emotional: ["emotional", "touching", "heartfelt", "moving", "feelings"],
+      fun: ["fun", "light", "funny", "entertaining", "cheerful", "upbeat"],
+      dark: ["dark", "serious", "intense", "heavy", "dramatic"],
+    }
+
+    // Extract entities (genres, titles, authors, etc.)
+    const genreKeywords = [
+      "sci-fi",
+      "fantasy",
+      "romance",
+      "thriller",
+      "comedy",
+      "drama",
+      "horror",
+      "mystery",
+      "biography",
+      "history",
+    ]
+    const mediaKeywords = ["book", "movie", "film", "novel", "series", "documentary"]
+
+    // Analyze input dynamically
+    for (const [intentType, patterns] of Object.entries(intentPatterns)) {
+      if (patterns.some((pattern) => input.toLowerCase().includes(pattern))) {
+        intent = intentType
+        break
+      }
+    }
+
+    for (const [moodType, patterns] of Object.entries(moodPatterns)) {
+      if (patterns.some((pattern) => input.toLowerCase().includes(pattern))) {
+        mood = moodType
+        break
+      }
+    }
+
+    genreKeywords.forEach((genre) => {
+      if (input.toLowerCase().includes(genre)) entities.push(genre)
+    })
+
+    mediaKeywords.forEach((media) => {
+      if (input.toLowerCase().includes(media)) entities.push(media)
+    })
+
+    return { intent, mood, entities }
+  }
+
+  const generateContextualResponse = (userInput: string, analysis: any, context: ConversationContext): Message => {
+    const { intent, mood, entities } = analysis
+
+    // Update conversation context
+    const updatedContext = {
+      ...context,
+      userPreferences: {
+        ...context.userPreferences,
+        currentMood: mood || context.userPreferences.currentMood,
+        recentInteractions: [...context.userPreferences.recentInteractions, userInput].slice(-5),
+      },
+      lastIntent: intent,
+    }
+
+    setConversationContext(updatedContext)
+
+    // Generate dynamic response based on analysis
+    let responseContent = ""
+    let suggestions: string[] = []
+    let recommendations = null
+
+    switch (intent) {
+      case "mood_based":
+        responseContent = `I can sense you're looking for something that matches your ${mood || "current"} mood. Let me find content that resonates with how you're feeling right now.`
+        suggestions = [
+          `More ${mood || "similar"} recommendations`,
+          "Tell me more about your mood",
+          "Show me different vibes",
+          "What else matches this feeling?",
+        ]
+        recommendations = generateMoodBasedRecommendations(mood, entities)
+        break
+
+      case "discovery":
+        responseContent =
+          "I love helping you discover new experiences! Based on our conversation and your unique preferences, here are some fresh recommendations that might surprise you."
+        suggestions = [
+          "Show me more hidden gems",
+          "Something completely different",
+          "Based on my history",
+          "Random surprise me",
+        ]
+        recommendations = generateDiscoveryRecommendations(context, entities)
+        break
+
+      case "progress":
+        responseContent = `I see you're interested in tracking your entertainment journey. ${getProgressInsight(context)} What would you like to update or explore?`
+        suggestions = ["Update current progress", "Set new goals", "View detailed stats", "Celebrate achievements"]
+        break
+
+      case "social":
+        responseContent =
+          "Great question! I can show you what's resonating with people right now, plus personalized picks based on social trends and your taste."
+        suggestions = [
+          "What's trending in my genres?",
+          "Popular with similar users",
+          "Social recommendations",
+          "Community favorites",
+        ]
+        recommendations = generateSocialRecommendations(entities)
+        break
+
+      case "specific_query":
+        responseContent = analyzeSpecificQuery(userInput, context)
+        suggestions = generateContextualSuggestions(userInput, context)
+        break
+
+      default:
+        // Dynamic general response based on conversation history
+        const recentTopics = context.userPreferences.recentInteractions.join(" ")
+        responseContent = generatePersonalizedResponse(userInput, recentTopics, context)
+        suggestions = [
+          "Tell me more about this",
+          "Show me related content",
+          "Based on our conversation",
+          "Something similar but different",
+        ]
+    }
+
+    return {
+      id: Date.now().toString(),
+      type: "beevus",
+      content: responseContent,
+      timestamp: new Date(),
+      suggestions,
+      recommendations,
+      context: { intent, mood, entities },
+    }
+  }
+
+  const generateMoodBasedRecommendations = (mood: string | null, entities: string[]) => {
+    const moodRecommendations = {
+      adventurous: [
+        {
+          title: "The Seven Husbands of Evelyn Hugo",
+          type: "book" as const,
+          author: "Taylor Jenkins Reid",
+          rating: 4.6,
+          reason: "Bold storytelling with unexpected twists that match your adventurous spirit",
+        },
+        {
+          title: "Mad Max: Fury Road",
+          type: "movie" as const,
+          director: "George Miller",
+          rating: 4.4,
+          reason: "High-octane adventure that delivers the thrill you're seeking",
+        },
+      ],
+      cozy: [
+        {
+          title: "The House in the Cerulean Sea",
+          type: "book" as const,
+          author: "TJ Klune",
+          rating: 4.7,
+          reason: "Warm, comforting fantasy that creates the perfect cozy atmosphere",
+        },
+        {
+          title: "Julie & Julia",
+          type: "movie" as const,
+          director: "Nora Ephron",
+          rating: 4.2,
+          reason: "Heartwarming story that feels like a warm hug",
+        },
+      ],
+      intellectual: [
+        {
+          title: "Klara and the Sun",
+          type: "book" as const,
+          author: "Kazuo Ishiguro",
+          rating: 4.3,
+          reason: "Thought-provoking narrative that challenges your perspective",
+        },
+        {
+          title: "Arrival",
+          type: "movie" as const,
+          director: "Denis Villeneuve",
+          rating: 4.5,
+          reason: "Intellectually stimulating sci-fi that rewards deep thinking",
+        },
+      ],
+    }
+
+    return (
+      moodRecommendations[mood as keyof typeof moodRecommendations] || [
+        {
+          title: "Circe",
+          type: "book" as const,
+          author: "Madeline Miller",
+          rating: 4.5,
+          reason: "Beautifully crafted story that adapts to any mood",
+        },
+        {
+          title: "The Grand Budapest Hotel",
+          type: "movie" as const,
+          director: "Wes Anderson",
+          rating: 4.3,
+          reason: "Visually stunning film with universal appeal",
+        },
+      ]
+    )
+  }
+
+  const generateDiscoveryRecommendations = (context: ConversationContext, entities: string[]) => {
+    // Generate recommendations based on conversation context and user's exploration intent
+    return [
+      {
+        title: "The Midnight Library",
+        type: "book" as const,
+        author: "Matt Haig",
+        rating: 4.4,
+        reason: "Unique concept that explores infinite possibilities - perfect for discovery",
+      },
+      {
+        title: "Everything Everywhere All at Once",
+        type: "movie" as const,
+        director: "Daniels",
+        rating: 4.6,
+        reason: "Genre-bending experience that defies expectations",
+      },
+    ]
+  }
+
+  const generateSocialRecommendations = (entities: string[]) => {
+    return [
+      {
+        title: "Tomorrow, and Tomorrow, and Tomorrow",
+        type: "book" as const,
+        author: "Gabrielle Zevin",
+        rating: 4.5,
+        reason: "Currently trending and beloved by readers worldwide",
+      },
+      {
+        title: "Top Gun: Maverick",
+        type: "movie" as const,
+        director: "Joseph Kosinski",
+        rating: 4.4,
+        reason: "Widely acclaimed and socially celebrated recent release",
+      },
+    ]
+  }
+
+  const analyzeSpecificQuery = (input: string, context: ConversationContext) => {
+    // Analyze the specific question and provide contextual answer
+    if (input.toLowerCase().includes("why")) {
+      return "That's a great question! Based on our conversation, I can provide insights tailored to your specific interests and preferences."
+    }
+    if (input.toLowerCase().includes("how")) {
+      return "I'd be happy to guide you through that! Let me break it down in a way that makes sense for your situation."
+    }
+    return "I understand you're looking for specific information. Let me provide a detailed response based on your unique context and our conversation history."
+  }
+
+  const generatePersonalizedResponse = (input: string, recentTopics: string, context: ConversationContext) => {
+    const hasHistory = recentTopics.length > 0
+    if (hasHistory) {
+      return `Based on our conversation about ${recentTopics.split(" ").slice(-3).join(", ")}, I can see you're interested in exploring this further. Let me provide some personalized insights!`
+    }
+    return "I'm here to understand exactly what you're looking for. Every response I give is tailored to your unique preferences and our conversation. What's on your mind?"
+  }
+
+  const generateContextualSuggestions = (input: string, context: ConversationContext) => {
+    const lastIntent = context.lastIntent
+    const suggestions = [
+      "Tell me more about this",
+      "Show me something similar",
+      "Based on my preferences",
+      "Surprise me with variety",
+    ]
+
+    if (lastIntent === "mood_based") {
+      suggestions.push("Match my current vibe")
+    }
+    if (lastIntent === "discovery") {
+      suggestions.push("More hidden gems")
+    }
+
+    return suggestions.slice(0, 4)
+  }
+
+  const getProgressInsight = (context: ConversationContext) => {
+    const interactions = context.userPreferences.recentInteractions
+    if (interactions.length > 0) {
+      return "I can see you've been actively engaging with your entertainment choices."
+    }
+    return "Let's explore your entertainment journey together."
+  }
 
   const handleSendMessage = async (content: string) => {
     if (!content.trim()) return
@@ -66,94 +402,12 @@ export function BeevusChat() {
     setInputValue("")
     setIsTyping(true)
 
-    // Simulate AI response
     setTimeout(() => {
-      const aiResponse = generateAIResponse(content)
+      const analysis = analyzeUserInput(content, conversationContext)
+      const aiResponse = generateContextualResponse(content, analysis, conversationContext)
       setMessages((prev) => [...prev, aiResponse])
       setIsTyping(false)
     }, 1500)
-  }
-
-  const generateAIResponse = (userInput: string): Message => {
-    const input = userInput.toLowerCase()
-
-    if (input.includes("recommend") && input.includes("book")) {
-      return {
-        id: Date.now().toString(),
-        type: "beevus",
-        content:
-          "Based on your reading history and preferences, I've found some excellent book recommendations for you:",
-        timestamp: new Date(),
-        recommendations: [
-          {
-            title: "Klara and the Sun",
-            type: "book",
-            author: "Kazuo Ishiguro",
-            rating: 4.2,
-            reason: "Matches your interest in thoughtful sci-fi with emotional depth",
-          },
-          {
-            title: "The Seven Moons of Maali Almeida",
-            type: "book",
-            author: "Shehan Karunatilaka",
-            rating: 4.5,
-            reason: "Award-winning fantasy that aligns with your diverse reading taste",
-          },
-        ],
-        suggestions: ["Add to wishlist", "Tell me more about these", "Show different genres"],
-      }
-    }
-
-    if (input.includes("movie") || input.includes("watch")) {
-      return {
-        id: Date.now().toString(),
-        type: "beevus",
-        content: "Perfect timing! Here are some movie recommendations tailored to your viewing preferences:",
-        timestamp: new Date(),
-        recommendations: [
-          {
-            title: "The Banshees of Inisherin",
-            type: "movie",
-            director: "Martin McDonagh",
-            rating: 4.1,
-            reason: "Dark comedy-drama that matches your taste for character-driven stories",
-          },
-          {
-            title: "RRR",
-            type: "movie",
-            director: "S.S. Rajamouli",
-            rating: 4.3,
-            reason: "Epic action film with the storytelling depth you enjoy",
-          },
-        ],
-        suggestions: ["Add to watchlist", "Find where to stream", "Show similar movies"],
-      }
-    }
-
-    if (input.includes("progress") || input.includes("track")) {
-      return {
-        id: Date.now().toString(),
-        type: "beevus",
-        content:
-          "I can help you track your reading and viewing progress! You currently have 3 books in progress and 2 movies on your watchlist. Would you like me to update any of them or set reading goals?",
-        timestamp: new Date(),
-        suggestions: ["Update current book", "Set reading goal", "View progress stats", "Mark something as completed"],
-      }
-    }
-
-    return {
-      id: Date.now().toString(),
-      type: "beevus",
-      content:
-        "I understand you're looking for entertainment recommendations! I can help you discover new books and movies, track your progress, analyze your preferences, and much more. What specific area would you like to explore?",
-      timestamp: new Date(),
-      suggestions: [
-        "Show my reading stats",
-        "Recommend based on mood",
-        "What's trending now?",
-        "Help me choose tonight's movie",
-      ],
-    }
   }
 
   const handleSuggestionClick = (suggestion: string) => {
