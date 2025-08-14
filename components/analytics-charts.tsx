@@ -29,12 +29,12 @@ export function AnalyticsCharts() {
   ]
 
   const genreData = [
-    { name: "Sci-Fi", value: 28, color: "#0891b2" },
-    { name: "Fiction", value: 22, color: "#84cc16" },
-    { name: "Thriller", value: 18, color: "#f59e0b" },
-    { name: "Romance", value: 12, color: "#ef4444" },
-    { name: "Biography", value: 10, color: "#8b5cf6" },
-    { name: "Other", value: 10, color: "#6b7280" },
+    { name: "Sci-Fi", value: 28, color: "#9333ea" },
+    { name: "Fiction", value: 22, color: "#c026d3" },
+    { name: "Thriller", value: 18, color: "#ec4899" },
+    { name: "Romance", value: 12, color: "#7c3aed" },
+    { name: "Biography", value: 10, color: "#a855f7" },
+    { name: "Other", value: 10, color: "#6b21a8" },
   ]
 
   const readingProgressData = [
@@ -68,11 +68,11 @@ export function AnalyticsCharts() {
             config={{
               books: {
                 label: "Books",
-                color: "#0891b2",
+                color: "#9333ea",
               },
               movies: {
                 label: "Movies",
-                color: "#84cc16",
+                color: "#ec4899",
               },
             }}
             className="h-80"
@@ -83,8 +83,8 @@ export function AnalyticsCharts() {
                 <XAxis dataKey="month" />
                 <YAxis />
                 <ChartTooltip content={<ChartTooltipContent />} />
-                <Bar dataKey="books" fill="#0891b2" radius={4} />
-                <Bar dataKey="movies" fill="#84cc16" radius={4} />
+                <Bar dataKey="books" fill="#9333ea" radius={4} />
+                <Bar dataKey="movies" fill="#ec4899" radius={4} />
               </BarChart>
             </ResponsiveContainer>
           </ChartContainer>
@@ -148,11 +148,11 @@ export function AnalyticsCharts() {
               config={{
                 pages: {
                   label: "Pages Read",
-                  color: "#0891b2",
+                  color: "#9333ea",
                 },
                 target: {
                   label: "Target",
-                  color: "#84cc16",
+                  color: "#c026d3",
                 },
               }}
               className="h-64"
@@ -163,8 +163,8 @@ export function AnalyticsCharts() {
                   <XAxis dataKey="date" />
                   <YAxis />
                   <ChartTooltip content={<ChartTooltipContent />} />
-                  <Area type="monotone" dataKey="pages" stroke="#0891b2" fill="#0891b2" fillOpacity={0.3} />
-                  <Line type="monotone" dataKey="target" stroke="#84cc16" strokeDasharray="5 5" />
+                  <Area type="monotone" dataKey="pages" stroke="#9333ea" fill="#9333ea" fillOpacity={0.3} />
+                  <Line type="monotone" dataKey="target" stroke="#c026d3" strokeDasharray="5 5" />
                 </AreaChart>
               </ResponsiveContainer>
             </ChartContainer>

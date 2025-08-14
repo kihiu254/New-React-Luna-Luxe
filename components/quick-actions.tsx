@@ -9,14 +9,14 @@ export function QuickActions() {
       title: "Add Book",
       description: "Track a new book",
       icon: BookOpen,
-      color: "text-cyan-600 hover:bg-cyan-50 dark:hover:bg-cyan-950",
+      color: "text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-950",
       href: "/add-media",
     },
     {
       title: "Add Movie",
       description: "Log a movie",
       icon: Film,
-      color: "text-lime-500 hover:bg-lime-50 dark:hover:bg-lime-950",
+      color: "text-fuchsia-600 hover:bg-fuchsia-50 dark:hover:bg-fuchsia-950",
       href: "/add-media",
     },
     {
@@ -30,14 +30,14 @@ export function QuickActions() {
       title: "Wishlist",
       description: "Manage your wishlist",
       icon: Heart,
-      color: "text-red-500 hover:bg-red-50 dark:hover:bg-red-950",
+      color: "text-pink-500 hover:bg-pink-50 dark:hover:bg-pink-950",
       href: "/library?filter=wishlist",
     },
     {
       title: "Analytics",
       description: "View your stats",
       icon: BarChart3,
-      color: "text-purple-500 hover:bg-purple-50 dark:hover:bg-purple-950",
+      color: "text-violet-600 hover:bg-violet-50 dark:hover:bg-violet-950",
       href: "/analytics",
     },
     {
