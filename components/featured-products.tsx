@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { AddToCartButton } from "@/components/cart/add-to-cart-button"
 
 const productCategories = {
@@ -46,39 +46,46 @@ const productCategories = {
 
 export function FeaturedProducts() {
   const [activeCategory, setActiveCategory] = useState<keyof typeof productCategories>("best-sales")
+  const [animateProducts, setAnimateProducts] = useState(false)
+
+  useEffect(() => {
+    setAnimateProducts(false)
+    const timer = setTimeout(() => setAnimateProducts(true), 100)
+    return () => clearTimeout(timer)
+  }, [activeCategory])
 
   return (
-    <section className="py-16">
+    <section className="py-16 scroll-reveal">
       <div className="max-w-7xl mx-auto px-4">
         {/* Category Navigation */}
         <div className="flex justify-center mb-12">
           <nav className="flex gap-8">
             <button
               onClick={() => setActiveCategory("best-sales")}
-              className={`text-lg font-medium pb-2 border-b-2 transition-colors ${
+              className={`text-lg font-medium pb-2 border-b-2 transition-all duration-300 hover-bounce ${
                 activeCategory === "best-sales"
-                  ? "text-gray-900 border-gray-900"
-                  : "text-gray-500 border-transparent hover:text-gray-700"
+                  ? "text-foreground border-primary animate-glow"
+                  : "text-muted-foreground border-transparent hover:text-foreground"
               }`}
             >
               Best Sales
             </button>
             <button
               onClick={() => setActiveCategory("new-arrivals")}
-              className={`text-lg font-medium pb-2 border-b-2 transition-colors ${
+              className={`text-lg font-medium pb-2 border-b-2 transition-all duration-300 hover-bounce ${
                 activeCategory === "new-arrivals"
-                  ? "text-gray-900 border-gray-900"
-                  : "text-gray-500 border-transparent hover:text-gray-700"
+                  ? "text-foreground border-primary animate-glow"
+                  : "text-muted-foreground border-transparent hover:text-foreground"
               }`}
             >
               New Arrivals
             </button>
             <button
               onClick={() => setActiveCategory("hot-sales")}
-              className={`text-lg font-medium pb-2 border-b-2 transition-colors ${
+              className={`text-lg font-medium pb-2 border-b-2 transition-all duration-300 hover-bounce ${
                 activeCategory === "hot-sales"
-                  ? "text-gray-900 border-gray-900"
-                  : "text-gray-500 border-transparent hover:text-gray-700"
+                  ? "text-foreground border-primary animate-glow"
+                  : "text-muted-foreground border-transparent hover:text-foreground"
               }`}
             >
               Hot Sales
@@ -88,19 +95,31 @@ export function FeaturedProducts() {
 
         {/* Products Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {productCategories[activeCategory].map((product) => (
-            <div key={product.id} className="product-card group cursor-pointer">
-              <div className="aspect-square overflow-hidden rounded-lg bg-gray-100 mb-4">
+          {productCategories[activeCategory].map((product, index) => (
+            <div
+              key={product.id}
+              className={`product-card group cursor-pointer hover-tilt ${
+                animateProducts ? "animate-bounce-in" : "opacity-0"
+              }`}
+              style={{ animationDelay: `${index * 0.1}s` }}
+            >
+              <div className="aspect-square overflow-hidden rounded-lg bg-muted mb-4 relative">
+                <div className="absolute inset-0 skeleton animate-shimmer opacity-20"></div>
                 <img
                   src={product.image || "/placeholder.svg"}
                   alt={product.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-all duration-500 relative z-10"
                 />
+                <div className="absolute top-2 right-2 bg-primary text-primary-foreground px-2 py-1 rounded-full text-sm font-semibold animate-float opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  KSh {product.price}
+                </div>
               </div>
               <div className="text-center space-y-2">
-                <h3 className="text-lg font-medium text-gray-900">{product.name}</h3>
-                <p className="text-xl font-semibold text-gray-900">KSh {product.price.toFixed(2)}</p>
-                <AddToCartButton product={product} className="w-full" />
+                <h3 className="text-lg font-medium text-foreground group-hover:text-primary transition-colors duration-300">
+                  {product.name}
+                </h3>
+                <p className="text-xl font-semibold price-text animate-heartbeat">{`KSh ${product.price.toFixed(2)}`}</p>
+                <AddToCartButton product={product} className="w-full btn-primary hover-glow" />
               </div>
             </div>
           ))}
