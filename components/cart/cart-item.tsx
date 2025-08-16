@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-
+import Image from "next/image"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -31,8 +31,16 @@ export function CartItem({ item }: CartItemProps) {
   return (
     <div className="flex items-center gap-4 p-4 bg-white rounded-lg border shadow-sm">
       {/* Product Image */}
-      <div className="flex-shrink-0">
-        <img src={item.image || "/placeholder.svg"} alt={item.name} className="w-20 h-20 object-cover rounded-md" />
+      <div className="flex-shrink-0 relative">
+        <div className="relative w-20 h-20 rounded-md overflow-hidden">
+          <Image
+            src={item.image || "/placeholder.svg?height=80&width=80&text=Product"}
+            alt={`${item.name} - Cart item`}
+            fill
+            className="object-cover"
+            sizes="80px"
+          />
+        </div>
       </div>
 
       {/* Product Details */}

@@ -30,14 +30,22 @@ export function CustomerServiceContent() {
       title: "Call Us",
       description: "Speak directly with our customer service team",
       action: "Call +254 112081866",
-      onClick: () => (window.location.href = "tel:+254112081866"),
+      onClick: () => {
+        if (typeof window !== "undefined") {
+          window.location.href = "tel:+254112081866"
+        }
+      },
     },
     {
       icon: Mail,
       title: "Email Support",
       description: "Send us an email and we'll respond within 24 hours",
       action: "Send Email",
-      onClick: () => (window.location.href = "mailto:info@lunaluxe.co.ke"),
+      onClick: () => {
+        if (typeof window !== "undefined") {
+          window.location.href = "mailto:1kihiupaul@gmail.com"
+        }
+      },
     },
   ]
 

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { AddToCartButton } from "@/components/cart/add-to-cart-button"
+import Image from "next/image"
 
 const productCategories = {
   "best-sales": [
@@ -105,10 +106,12 @@ export function FeaturedProducts() {
             >
               <div className="aspect-square overflow-hidden rounded-lg bg-muted mb-4 relative">
                 <div className="absolute inset-0 skeleton animate-shimmer opacity-20"></div>
-                <img
-                  src={product.image || "/placeholder.svg"}
-                  alt={product.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-all duration-500 relative z-10"
+                <Image
+                  src={product.image || "/placeholder.svg?height=300&width=300&text=Product"}
+                  alt={`${product.name} - Featured product in ${activeCategory} category`}
+                  fill
+                  className="object-cover group-hover:scale-110 transition-all duration-500 relative z-10"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                 />
                 <div className="absolute top-2 right-2 bg-primary text-primary-foreground px-2 py-1 rounded-full text-sm font-semibold animate-float opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   KSh {product.price}

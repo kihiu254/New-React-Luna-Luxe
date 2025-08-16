@@ -1,6 +1,7 @@
 "use client"
 
 import { useCart } from "@/hooks/use-cart"
+import Image from "next/image"
 
 export function OrderSummary() {
   const { items, getSubtotal, getShipping, getTax, getTotal } = useCart()
@@ -18,7 +19,15 @@ export function OrderSummary() {
       <div className="space-y-3 mb-6">
         {items.map((item) => (
           <div key={`${item.id}-${item.size}-${item.color}`} className="flex items-center gap-3">
-            <img src={item.image || "/placeholder.svg"} alt={item.name} className="w-12 h-12 object-cover rounded" />
+            <div className="relative w-12 h-12 rounded overflow-hidden flex-shrink-0">
+              <Image
+                src={item.image || "/placeholder.svg?height=48&width=48&text=Item"}
+                alt={`${item.name} - Order summary`}
+                fill
+                className="object-cover"
+                sizes="48px"
+              />
+            </div>
             <div className="flex-grow">
               <h4 className="text-sm font-medium text-gray-900">{item.name}</h4>
               <p className="text-xs text-gray-600">Qty: {item.quantity}</p>

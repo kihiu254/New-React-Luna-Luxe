@@ -15,7 +15,7 @@ export function ContactInfo() {
     {
       icon: Mail,
       title: "Email Us",
-      details: ["info@lunaluxe.co.ke"],
+      details: ["1kihiupaul@gmail.com"],
     },
     {
       icon: Clock,

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { Search, Calendar, User, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import Image from "next/image"
 
 interface BlogPost {
   id: number
@@ -174,8 +175,14 @@ export default function BlogContent() {
               key={post.id}
               className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
             >
-              <div className="relative">
-                <img src={post.image || "/placeholder.svg"} alt={post.title} className="w-full h-48 object-cover" />
+              <div className="relative aspect-[4/3] overflow-hidden">
+                <Image
+                  src={post.image || "/placeholder.svg?height=300&width=400&text=Blog+Post"}
+                  alt={`${post.title} - Fashion blog post about ${post.category}`}
+                  fill
+                  className="object-cover hover:scale-105 transition-transform duration-300"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
                 <div className="absolute top-4 left-4">
                   <span className="bg-rose-600 text-white px-3 py-1 rounded-full text-sm font-medium capitalize">
                     {post.category}

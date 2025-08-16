@@ -6,6 +6,7 @@ import { AuthProvider } from "@/hooks/use-auth"
 import { CartProvider } from "@/hooks/use-cart"
 import { ThemeProvider } from "@/hooks/use-theme"
 import { Toaster } from "@/components/ui/toaster"
+import { AnnouncementBanner } from "@/components/announcement-banner"
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -38,6 +39,7 @@ export default function RootLayout({
         <ThemeProvider>
           <AuthProvider>
             <CartProvider>
+              <AnnouncementBanner />
               {children}
               <Toaster />
             </CartProvider>

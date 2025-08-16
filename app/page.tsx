@@ -1,5 +1,5 @@
 import { Header } from "@/components/header"
-import { HeroSection } from "@/components/hero-section"
+import { ModernHeroSection } from "@/components/modern-hero-section"
 import { CategoryShowcase } from "@/components/category-showcase"
 import { FeaturedProducts } from "@/components/featured-products"
 import { Footer } from "@/components/footer"
@@ -11,17 +11,40 @@ import { SpecialOffersSection } from "@/components/special-offers-section"
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       <Header />
-      <main>
-        <HeroSection />
-        <CategoryShowcase />
-        <TrendingSection />
-        <FeaturedProducts />
-        <SpecialOffersSection />
-        <BrandStorySection />
-        <TestimonialsSection />
-        <NewsletterSection />
+      <main className="relative">
+        <section className="relative overflow-hidden">
+          <ModernHeroSection />
+        </section>
+
+        <section className="py-16 bg-card/30">
+          <CategoryShowcase />
+        </section>
+
+        <section className="py-16 bg-background">
+          <TrendingSection />
+        </section>
+
+        <section className="py-16 bg-muted/20">
+          <FeaturedProducts />
+        </section>
+
+        <section className="py-16 bg-gradient-to-br from-primary/5 to-secondary/5">
+          <SpecialOffersSection />
+        </section>
+
+        <section className="py-16 bg-background">
+          <BrandStorySection />
+        </section>
+
+        <section className="py-16 bg-card/50">
+          <TestimonialsSection />
+        </section>
+
+        <section className="py-16 bg-gradient-to-r from-primary to-secondary">
+          <NewsletterSection />
+        </section>
       </main>
       <Footer />
     </div>
