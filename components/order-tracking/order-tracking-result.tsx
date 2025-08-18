@@ -1,9 +1,12 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 import { OrderTimeline } from "@/components/order-tracking/order-timeline"
 import type { OrderStatus } from "./order-tracking-content"
-import { Package, Calendar, MapPin, CreditCard } from "lucide-react"
+import { Package, Calendar, MapPin, CreditCard, Truck, Phone, Mail } from "lucide-react"
+import Image from "next/image"
 
 interface OrderTrackingResultProps {
   orderStatus: OrderStatus
@@ -11,110 +14,221 @@ interface OrderTrackingResultProps {
 }
 
 export function OrderTrackingResult({ orderStatus, onReset }: OrderTrackingResultProps) {
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "delivered":
+        return "bg-green-100 text-green-800"
+      case "out-for-delivery":
+        return "bg-blue-100 text-blue-800"
+      case "shipped":
+        return "bg-purple-100 text-purple-800"
+      case "processing":
+        return "bg-yellow-100 text-yellow-800"
+      case "cancelled":
+        return "bg-red-100 text-red-800"
+      default:
+        return "bg-gray-100 text-gray-800"
+    }
+  }
+
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case "placed":
+        return "Order Placed"
+      case "confirmed":
+        return "Order Confirmed"
+      case "processing":
+        return "Processing"
+      case "packed":
+        return "Packed"
+      case "shipped":
+        return "Shipped"
+      case "out-for-delivery":
+        return "Out for Delivery"
+      case "delivered":
+        return "Delivered"
+      case "cancelled":
+        return "Cancelled"
+      default:
+        return status.charAt(0).toUpperCase() + status.slice(1)
+    }
+  }
+
   return (
     <div className="space-y-6">
       {/* Order Header */}
-      <div className="bg-white rounded-lg shadow-sm p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-serif font-semibold text-gray-900">Order Status</h2>
-          <Button variant="outline" onClick={onReset} size="sm" className="bg-transparent">
-            Track Another Order
-          </Button>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="flex items-center space-x-3">
-            <Package className="h-5 w-5 text-gray-400" />
-            <div>
-              <p className="text-sm text-gray-600">Order Number</p>
-              <p className="font-semibold text-gray-900">{orderStatus.orderNumber}</p>
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2">
+              <Package className="h-5 w-5 text-primary" />
+              Order #{orderStatus.orderNumber}
+            </CardTitle>
+            <div className="flex items-center gap-3">
+              <Badge className={getStatusColor(orderStatus.currentStatus)}>
+                {getStatusText(orderStatus.currentStatus)}
+              </Badge>
+              <Button variant="outline" onClick={onReset} size="sm">
+                Track Another Order
+              </Button>
             </div>
           </div>
-
-          <div className="flex items-center space-x-3">
-            <Calendar className="h-5 w-5 text-gray-400" />
-            <div>
-              <p className="text-sm text-gray-600">Order Date</p>
-              <p className="font-semibold text-gray-900">{new Date(orderStatus.orderDate).toLocaleDateString()}</p>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="flex items-center space-x-3">
+              <Calendar className="h-5 w-5 text-muted-foreground" />
+              <div>
+                <p className="text-sm text-muted-foreground">Order Date</p>
+                <p className="font-semibold">{new Date(orderStatus.orderDate).toLocaleDateString()}</p>
+              </div>
             </div>
-          </div>
 
-          <div className="flex items-center space-x-3">
-            <MapPin className="h-5 w-5 text-gray-400" />
-            <div>
-              <p className="text-sm text-gray-600">Estimated Delivery</p>
-              <p className="font-semibold text-gray-900">
-                {new Date(orderStatus.estimatedDelivery).toLocaleDateString()}
-              </p>
+            <div className="flex items-center space-x-3">
+              <MapPin className="h-5 w-5 text-muted-foreground" />
+              <div>
+                <p className="text-sm text-muted-foreground">Estimated Delivery</p>
+                <p className="font-semibold">{new Date(orderStatus.estimatedDelivery).toLocaleDateString()}</p>
+              </div>
             </div>
-          </div>
 
-          <div className="flex items-center space-x-3">
-            <CreditCard className="h-5 w-5 text-gray-400" />
-            <div>
-              <p className="text-sm text-gray-600">Payment Method</p>
-              <p className="font-semibold text-gray-900">{orderStatus.paymentMethod}</p>
+            <div className="flex items-center space-x-3">
+              <CreditCard className="h-5 w-5 text-muted-foreground" />
+              <div>
+                <p className="text-sm text-muted-foreground">Payment Method</p>
+                <p className="font-semibold">{orderStatus.paymentMethod}</p>
+              </div>
             </div>
+
+            {orderStatus.trackingNumber && (
+              <div className="flex items-center space-x-3">
+                <Truck className="h-5 w-5 text-muted-foreground" />
+                <div>
+                  <p className="text-sm text-muted-foreground">Tracking Number</p>
+                  <p className="font-semibold">{orderStatus.trackingNumber}</p>
+                  {orderStatus.carrier && <p className="text-xs text-muted-foreground">{orderStatus.carrier}</p>}
+                </div>
+              </div>
+            )}
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Order Timeline */}
-      <OrderTimeline currentStatus={orderStatus.currentStatus} />
+      <OrderTimeline currentStatus={orderStatus.currentStatus} timeline={orderStatus.timeline} />
 
       {/* Order Details */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Items */}
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <h3 className="text-lg font-serif font-semibold text-gray-900 mb-4">Order Items</h3>
-          <div className="space-y-3">
-            {orderStatus.items.map((item, index) => (
-              <div
-                key={index}
-                className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0"
-              >
-                <div>
-                  <p className="font-medium text-gray-900">{item.name}</p>
-                  <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
+        <Card>
+          <CardHeader>
+            <CardTitle>Order Items</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {orderStatus.items.map((item) => (
+                <div key={item.id} className="flex items-center gap-4 py-3 border-b border-border last:border-0">
+                  <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-muted">
+                    <Image
+                      src={item.image || "/placeholder.svg"}
+                      alt={item.name}
+                      fill
+                      className="object-cover"
+                      sizes="64px"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-medium">{item.name}</p>
+                    <p className="text-sm text-muted-foreground">Quantity: {item.quantity}</p>
+                  </div>
+                  <p className="font-semibold">KSh {(item.price * item.quantity).toLocaleString()}</p>
                 </div>
-                <p className="font-semibold text-gray-900">KSh {(item.price * item.quantity).toFixed(2)}</p>
-              </div>
-            ))}
-            <div className="pt-3 border-t">
-              <div className="flex justify-between items-center">
-                <p className="font-semibold text-gray-900">Total</p>
-                <p className="font-bold text-lg text-gray-900">KSh {orderStatus.total.toFixed(2)}</p>
+              ))}
+              <div className="pt-4 border-t">
+                <div className="flex justify-between items-center">
+                  <p className="font-semibold">Total</p>
+                  <p className="font-bold text-lg text-primary">KSh {orderStatus.total.toLocaleString()}</p>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
         {/* Shipping Info */}
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <h3 className="text-lg font-serif font-semibold text-gray-900 mb-4">Shipping Information</h3>
-          <div className="space-y-3">
-            <div>
-              <p className="text-sm text-gray-600">Delivery Address</p>
-              <p className="font-medium text-gray-900">{orderStatus.shippingAddress}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-600">Estimated Delivery</p>
-              <p className="font-medium text-gray-900">
-                {new Date(orderStatus.estimatedDelivery).toLocaleDateString("en-US", {
-                  weekday: "long",
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </p>
-            </div>
-            {orderStatus.currentStatus === "delivered" && (
-              <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-                <p className="text-sm text-green-800 font-medium">✓ Package delivered successfully!</p>
+        <Card>
+          <CardHeader>
+            <CardTitle>Shipping Information</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div>
+                <p className="text-sm text-muted-foreground mb-1">Delivery Address</p>
+                <div className="font-medium">
+                  <p>{orderStatus.shippingAddress.street}</p>
+                  <p>
+                    {orderStatus.shippingAddress.city}, {orderStatus.shippingAddress.state}
+                  </p>
+                  <p>
+                    {orderStatus.shippingAddress.country} {orderStatus.shippingAddress.postalCode}
+                  </p>
+                </div>
               </div>
-            )}
-          </div>
-        </div>
+
+              <div>
+                <p className="text-sm text-muted-foreground mb-1">Estimated Delivery</p>
+                <p className="font-medium">
+                  {new Date(orderStatus.estimatedDelivery).toLocaleDateString("en-US", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </p>
+              </div>
+
+              {orderStatus.currentStatus === "delivered" && (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <p className="text-sm text-green-800 font-medium flex items-center gap-2">
+                    <Package className="h-4 w-4" />
+                    Package delivered successfully!
+                  </p>
+                </div>
+              )}
+
+              {orderStatus.currentStatus === "out-for-delivery" && (
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <p className="text-sm text-blue-800 font-medium flex items-center gap-2">
+                    <Truck className="h-4 w-4" />
+                    Your package is out for delivery today!
+                  </p>
+                  <div className="mt-2 flex items-center gap-4 text-xs text-blue-700">
+                    <span className="flex items-center gap-1">
+                      <Phone className="h-3 w-3" />
+                      Driver: +254 700 123 456
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              <div className="pt-4 border-t">
+                <p className="text-sm text-muted-foreground mb-2">Need help with your order?</p>
+                <div className="flex items-center gap-4 text-sm">
+                  <a
+                    href="mailto:1kihiupaul@gmail.com"
+                    className="flex items-center gap-1 text-primary hover:underline"
+                  >
+                    <Mail className="h-3 w-3" />
+                    Email Support
+                  </a>
+                  <a href="tel:+254700123456" className="flex items-center gap-1 text-primary hover:underline">
+                    <Phone className="h-3 w-3" />
+                    Call Support
+                  </a>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   )
