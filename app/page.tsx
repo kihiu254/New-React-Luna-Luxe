@@ -1,39 +1,29 @@
-import { DashboardHeader } from "@/components/dashboard-header"
-import { StatsOverview } from "@/components/stats-overview"
-import { RecentActivity } from "@/components/recent-activity"
-import { QuickActions } from "@/components/quick-actions"
-import { BeevusWidget } from "@/components/beevus-widget"
+import { PortfolioHeader } from "@/components/portfolio-header"
+import { HeroSection } from "@/components/hero-section"
+import { SkillsOverview } from "@/components/skills-overview"
+import { FeaturedProjects } from "@/components/featured-projects"
+import { AuthSection } from "@/components/auth-section"
+import { ContactCTA } from "@/components/contact-cta"
 
-export default function Dashboard() {
+export default function Portfolio() {
   return (
     <div className="min-h-screen bg-background">
-      <DashboardHeader />
+      <PortfolioHeader />
 
-      <main className="container mx-auto px-4 py-6 space-y-8">
-        {/* Welcome Section */}
-        <section className="text-center space-y-4">
-          <h1 className="text-4xl font-bold text-foreground">
-            Your Entertainment, <span className="text-purple-600">Elevated</span>
-          </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Track, discover, and enjoy with Beevus - your AI companion for books and movies
-          </p>
-        </section>
+      <main className="space-y-0">
+        {/* Hero Section with flower-bee inspired design */}
+        <HeroSection />
 
-        {/* Stats Overview */}
-        <StatsOverview />
+        {/* Skills Overview */}
+        <SkillsOverview />
 
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-8">
-            <RecentActivity />
-            <QuickActions />
-          </div>
+        {/* Featured Projects Preview */}
+        <FeaturedProjects />
 
-          <div className="space-y-8">
-            <BeevusWidget />
-          </div>
-        </div>
+        <AuthSection />
+
+        {/* Contact Call-to-Action */}
+        <ContactCTA />
       </main>
     </div>
   )
